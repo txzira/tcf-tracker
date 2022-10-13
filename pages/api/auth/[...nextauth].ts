@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
+import { verifyPassword } from "../../../lib/hash";
 
 const prisma = new PrismaClient();
 
@@ -17,27 +18,29 @@ export default NextAuth({
         email: { label: "Email", type: "text", placeholder: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials: any, req) {
         try {
-          //Connect to DB
+          //Find user with the email
           const dbUser = await prisma.user.findUnique({
             where: {
               email: credentials?.email,
             },
           });
-          //Get all the users
-          //Find user with the email
+          //if user exist
           if (dbUser) {
-            console.log(dbUser);
-            if (dbUser.password == credentials?.password) {
+            //validate user password with bcrypt
+            const checkPassword = await verifyPassword(credentials?.password, dbUser.password);
+
+            if (checkPassword) {
               return dbUser;
+            } else {
+              //error incorrect email or password, but really just password
+              return null;
             }
+          } else {
+            //not found send error
+            return null;
           }
-          return null;
-          //Not found - send error res
-          //Incorrect password - send response
-          //Else send success response
-          //get and attach commerceJs JWT for commerce.customer's function usage
         } catch (err: any) {
           return null;
         }

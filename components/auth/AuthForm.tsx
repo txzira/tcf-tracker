@@ -17,33 +17,29 @@ const AuthForm = () => {
 
   const SignInInput = () => (
     <>
-      <div className="">
+      <div className="flex flex-col">
         <label htmlFor="email">Your Email</label>
-        <input required type="email" id="email" onChange={(event) => setEmail(event.target.value)} />
+        <input required type="email" id="email" value={email} onChange={(event) => setEmail(event.target.value)} />
       </div>
       <div className="">
         <label htmlFor="password">Your Password</label>
-        <input required type="password" id="password" onChange={(event) => setPassword(event.target.value)} />
+        <input required type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
       </div>
     </>
   );
   const SignUpInput = () => (
     <>
-      <div className="">
+      <div className="flex flex-col">
         <label htmlFor="email">Your Email</label>
-        <input required type="email" id="email" onChange={(event) => setEmail(event.target.value)} />
+        <input required type="email" id="email" value={email} onChange={(event) => setEmail(event.target.value)} />
       </div>
-      <div className="">
+      <div className="flex flex-col">
         <label htmlFor="name">Your Name</label>
         <input type="text" id="name" ref={name} />
       </div>
       <div className="">
         <label htmlFor="password">Your Password</label>
-        <input required type="password" id="password" onChange={(event) => setPassword(event.target.value)} />
-      </div>
-      <div className="">
-        <label htmlFor="confirmPassword">Your Password</label>
-        <input required type="password" id="confirmPassword" ref={confirmPassword} />
+        <input required type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
       </div>
     </>
   );
@@ -59,7 +55,6 @@ const AuthForm = () => {
       if (!signInReply?.error) {
         router.replace("/");
       }
-      console.log(signInReply?.error);
     } else {
       await fetch("/api/auth/signup", {
         method: "POST",
@@ -75,9 +70,73 @@ const AuthForm = () => {
     <FormContainer>
       <h1 className="text-center text-lg md:p-2">{isLogin ? "Login" : "Sign Up"}</h1>
       <form className="text-center" onSubmit={submitHandler}>
-        {/* <SignInInput /> */}
-        {/* <SignUpInput /> */}
-        {isLogin ? <SignInInput /> : <SignUpInput />}
+        <pre>
+          {email} : {password}
+        </pre>
+        {isLogin ? (
+          <>
+            {" "}
+            <div className="flex flex-col">
+              <label htmlFor="email">Your Email</label>
+              <input
+                required
+                className="text-center"
+                id="email"
+                type="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="password">Your Password</label>
+              <input
+                required
+                className="text-center"
+                id="password"
+                type="password"
+                placeholder="****"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col">
+              <label htmlFor="email">Your Email</label>
+              <input
+                required
+                className="text-center"
+                placeholder="email@example.com"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="name">Your Name</label>
+              <input type="text" id="name" className="text-center" placeholder="John Doe" ref={name} />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="password">Your Password</label>
+              <input
+                required
+                className="text-center"
+                id="password"
+                type="password"
+                placeholder="****"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label htmlFor="confirmPassword">Re-type Password</label>
+              <input required type="password" id="confirmPassword" ref={confirmPassword} />
+            </div>
+          </>
+        )}
         <div className="flex flex-col">
           <button>{isLogin ? "Login" : "Create Account"}</button>
           <button type="button" onClick={() => setIsLogin(!isLogin)}>
