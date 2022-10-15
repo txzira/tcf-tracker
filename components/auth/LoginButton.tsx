@@ -14,13 +14,11 @@ const LoginButton = () => {
   }
   return (
     <>
-      Not signed in <br />
       <Link href="/auth">
         <a>Sign In</a>
       </Link>
     </>
   );
-  return <div>LoginButton</div>;
 };
 
 export default LoginButton;

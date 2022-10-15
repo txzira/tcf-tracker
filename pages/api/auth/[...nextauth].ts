@@ -2,8 +2,7 @@ import NextAuth from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { verifyPassword } from "../../../lib/hash";
-
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prisma";
 
 export default NextAuth({
   //Configure JWT
@@ -26,6 +25,7 @@ export default NextAuth({
               email: credentials?.email,
             },
           });
+          await prisma.$disconnect();
           //if user exist
           if (dbUser) {
             //validate user password with bcrypt
@@ -48,4 +48,20 @@ export default NextAuth({
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+        token.name = user.name;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.name = token.name;
+      session.user.email = token.email;
+      session.user.role = token.role;
+      return session;
+    },
+  },
 });

@@ -15,35 +15,6 @@ const AuthForm = () => {
 
   const router = useRouter();
 
-  const SignInInput = () => (
-    <>
-      <div className="flex flex-col">
-        <label htmlFor="email">Your Email</label>
-        <input required type="email" id="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-      </div>
-      <div className="">
-        <label htmlFor="password">Your Password</label>
-        <input required type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-      </div>
-    </>
-  );
-  const SignUpInput = () => (
-    <>
-      <div className="flex flex-col">
-        <label htmlFor="email">Your Email</label>
-        <input required type="email" id="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-      </div>
-      <div className="flex flex-col">
-        <label htmlFor="name">Your Name</label>
-        <input type="text" id="name" ref={name} />
-      </div>
-      <div className="">
-        <label htmlFor="password">Your Password</label>
-        <input required type="password" id="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-      </div>
-    </>
-  );
-
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isLogin) {
@@ -56,13 +27,17 @@ const AuthForm = () => {
         router.replace("/");
       }
     } else {
-      await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      if (password === confirmPassword.current?.value) {
+        await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, name: name.current?.value }),
+        });
+      } else {
+        //error passwords do not match
+      }
     }
   };
 
@@ -75,12 +50,11 @@ const AuthForm = () => {
         </pre>
         {isLogin ? (
           <>
-            {" "}
-            <div className="flex flex-col">
+            <div className="flex flex-col px-2.5">
               <label htmlFor="email">Your Email</label>
               <input
                 required
-                className="text-center"
+                className="text-center border-b-2 p-2 focus:outline-none focus:border-blue-400"
                 id="email"
                 type="email"
                 placeholder="email@example.com"
@@ -88,11 +62,11 @@ const AuthForm = () => {
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col px-2.5">
               <label htmlFor="password">Your Password</label>
               <input
                 required
-                className="text-center"
+                className="text-center border-b-2 p-2 focus:outline-none focus:border-blue-400"
                 id="password"
                 type="password"
                 placeholder="****"

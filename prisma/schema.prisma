@@ -21,18 +21,35 @@ model User {
   password String @db.Char(60)
 }
 
-// model Quest {
-//   id Int @default(autoincrement()) @id
-//   faction Faction? @relation(fields: [factionId], references: [id])
-//   factionId Int? 
-//   name String @db.VarChar(200)
+model Faction{
+  id Int @default(autoincrement()) @id
+  name String @db.VarChar(30) @unique
+  quest Quest[]
+}
 
-// }
+model Quest {
+  id Int @default(autoincrement()) @id
+  name String @db.VarChar(200) @unique
+  faction Faction @relation(fields: [factionId], references: [id])
+  factionId Int 
+  questRequirement QuestRequirement[]
+}
 
+model QuestRequirement {
+  id Int @default(autoincrement()) @id
+  quest Quest @relation(fields: [questId], references: [id])
+  questId Int
+  item Item? @relation(fields: [itemId], references: [id])
+  itemId Int?
+  task String?
+  quantity Int
+}
 
-// model Faction{
-//   id Int @default(autoincrement()) @id
-//   name String @db.VarChar(30)
-//   quest Quest[]
-// }
+model Item{
+  id Int @default(autoincrement()) @id
+  name String @unique
+  kMarks Int
+  factionPoints Int?
+  questRequirement QuestRequirement[]
+}
 
