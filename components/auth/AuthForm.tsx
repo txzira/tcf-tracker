@@ -107,7 +107,7 @@ const AuthForm = () => {
             </div>
             <div className="flex flex-col">
               <label htmlFor="confirmPassword">Re-type Password</label>
-              <input required type="password" id="confirmPassword" ref={confirmPassword} />
+              <input required className="text-center" type="password" id="confirmPassword" ref={confirmPassword} />
             </div>
           </>
         )}

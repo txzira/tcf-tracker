@@ -4,15 +4,14 @@ import prisma from "../../../../lib/prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { name, factionId } = req.body;
-    console.log(name, factionId);
-    if (!name) {
+    const { name, kMarks, factionPoints } = req.body;
+    console.log(name, kMarks, factionPoints);
+    if (!name || !kMarks || !factionPoints) {
       res.status(422).json({ message: "Error: Invalid Data", status: 422 });
       return;
     }
     try {
-      await prisma.quest.create({ data: { name: name, faction: { connect: { id: Number(factionId) } } } });
-      await prisma.$disconnect();
+      await prisma.item.create({ data: { name, kMarks: Number(kMarks), factionPoints: Number(factionPoints) } });
       res.status(200).json({ message: `Success: Item, ${name} , added!`, status: 200 });
     } catch (error: any) {
       console.log(error.message);

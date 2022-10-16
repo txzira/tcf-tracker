@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { FloatingInput } from "../../Form";
+import { FloatingInput } from "../Form";
 
 const QuestRequirement = () => {
   const [quantity, setQuantity] = useState("");
