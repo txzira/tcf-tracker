@@ -17,11 +17,13 @@
     "@trpc/react": "^10.0.0-proxy-beta.17",
     "@trpc/server": "^10.0.0-proxy-beta.17",
     "bcryptjs": "^2.4.3",
+    "fs": "^0.0.1-security",
     "next": "12.3.1",
     "next-auth": "^4.13.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-transition-group": "^4.4.5",
     "zod": "^3.19.1"
   },
   "devDependencies": {
@@ -30,6 +32,7 @@
     "@types/node": "18.8.3",
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
+    "@types/react-transition-group": "^4.4.5",
     "autoprefixer": "^10.4.12",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",

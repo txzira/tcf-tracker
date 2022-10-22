@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import prisma from "../../../../lib/prisma";
+import { Data } from "../../../../types/response";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (req.method === "POST") {
     const { name, kMarks, factionPoints } = req.body;
     console.log(name, kMarks, factionPoints);

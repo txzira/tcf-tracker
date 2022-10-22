@@ -6,7 +6,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const items = await prisma.item.findMany();
-      console.log(items);
+      // console.log(items);
       res.status(200).json(items);
     } catch (error: any) {
       console.log(error.message);

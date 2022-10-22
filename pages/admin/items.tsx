@@ -1,13 +1,15 @@
 import { GetServerSideProps } from "next";
 import { Item } from "@prisma/client";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { FloatingInput } from "../../components/Form";
+import { FloatingInput, FloatingInputRef } from "../../components/Form";
+import { Data } from "../../types/response";
+import fs from "fs";
+import prisma from "../../lib/prisma";
 
 export const getStaticProps: GetServerSideProps = async ({ req }) => {
   const items = await prisma.item.findMany();
-  await prisma.$disconnect();
 
   console.log(items);
   return {
@@ -15,37 +17,35 @@ export const getStaticProps: GetServerSideProps = async ({ req }) => {
   };
 };
 
-const Item = ({ items }: { items: Item[] }) => {
-  const [name, setName] = useState("");
-  const [kMarks, setKmarks] = useState("");
-  const [factionPoints, setFactionPoints] = useState("");
+const Items = ({ items }: { items: Item[] }) => {
+  const name = useRef<HTMLInputElement>(null);
+  const kMarks = useRef<HTMLInputElement>(null);
+  const factionPoints = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const createItem = async () => {
-    fetch("/api/admin/item/create-item", {
+    const getRes = await fetch("/api/admin/item/create-item", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, kMarks, factionPoints }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status.toString().startsWith("2")) {
-          toast.success(response.message);
-        }
-      });
-    console.log(router.asPath);
-    router.replace(router.asPath);
+      body: JSON.stringify({ name: name.current?.value, kMarks: kMarks.current?.value, factionPoints: factionPoints.current?.value }),
+    });
+    const res: Data = await getRes.json();
+
+    if (res.status.toString().startsWith("2")) {
+      toast.success(res.message);
+      router.reload();
+    }
   };
-  console.log(items);
+
   return (
     <div>
       <h1>Item CRUD</h1>
       <div id="create" className="flex flex-row items-center gap-x-2">
-        <FloatingInput name="name" id="name" value={name} onChange={setName} label="Name" />
-        <FloatingInput name="kMarks" id="kMarks" value={kMarks} onChange={setKmarks} label="kMarks" />
-        <FloatingInput name="factionPoints" id="factionPoints" value={factionPoints} onChange={setFactionPoints} label="Faction Points" />
+        <FloatingInputRef name="name" id="name" ref={name} label="Name" />
+        <FloatingInputRef name="kMarks" id="kMarks" ref={kMarks} label="kMarks" />
+        <FloatingInputRef name="factionPoints" id="factionPoints" ref={factionPoints} label="Faction Points" />
         <button type="button" className="px-2 border rounded-lg bg-green-500 text-white border-black" onClick={createItem}>
           Add
         </button>
@@ -77,4 +77,4 @@ const Item = ({ items }: { items: Item[] }) => {
   );
 };
 
-export default Item;
+export default Items;

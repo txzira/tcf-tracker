@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  console.log(session);
+  // console.log(session);
   return (
     <div className="w-screen">
       <div className="text-center bg-black text-white w-screen md:p-2.5">Header Content</div>
