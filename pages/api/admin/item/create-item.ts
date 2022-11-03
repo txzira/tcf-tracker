@@ -5,14 +5,14 @@ import { Data } from "../../../../types/response";
 
 export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   if (req.method === "POST") {
-    const { name, kMarks, factionPoints } = req.body;
-    console.log(name, kMarks, factionPoints);
+    const { name, kMarks, factionPoints, imageUrl } = req.body;
+    console.log(name, kMarks, factionPoints, imageUrl);
     if (!name || !kMarks || !factionPoints) {
       res.status(422).json({ message: "Error: Invalid Data", status: 422 });
       return;
     }
     try {
-      await prisma.item.create({ data: { name, kMarks: Number(kMarks), factionPoints: Number(factionPoints) } });
+      await prisma.item.create({ data: { name, kMarks: Number(kMarks), factionPoints: Number(factionPoints), imageUrl: imageUrl } });
       res.status(200).json({ message: `Success: Item, ${name} , added!`, status: 200 });
     } catch (error: any) {
       console.log(error.message);

@@ -48,7 +48,9 @@ model QuestRequirement {
 model Item{
   id Int @default(autoincrement()) @id
   name String @unique
+  imageUrl String?
   kMarks Int
+  weight Float @default(0)
   factionPoints Int?
   questRequirement QuestRequirement[]
 }
