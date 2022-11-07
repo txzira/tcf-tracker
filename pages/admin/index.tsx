@@ -15,11 +15,7 @@ export const getStaticProps: GetServerSideProps = async () => {
 const Index = () => {
   const { data: session } = useSession();
 
-  if (session?.user.role === "admin") {
-    return <div>Admin Homepage</div>;
-  } else {
-    return <div>Unauthorized User.</div>;
-  }
+  return <div>Admin Homepage</div>;
 };
 
 export default Index;

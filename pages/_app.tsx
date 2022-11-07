@@ -5,14 +5,23 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { trpc } from "../utils/trpc";
 import { Session } from "next-auth";
+import AdminLayout from "../components/auth/AdminLayout";
 import Layout from "../components/Layout";
+import path from "path";
 
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps }, router }: AppProps<{ session: Session }>) => {
+  console.log(router.pathname);
   return (
     <SessionProvider session={session}>
       <Layout>
         <Toaster />
-        <Component {...pageProps} />
+        {router.pathname.startsWith("/admin") ? (
+          <AdminLayout>
+            <Component {...pageProps} />
+          </AdminLayout>
+        ) : (
+          <Component {...pageProps} />
+        )}
       </Layout>
     </SessionProvider>
   );
