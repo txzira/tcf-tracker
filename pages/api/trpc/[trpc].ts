@@ -18,19 +18,17 @@ export const appRouter = t.router({
         greeting: `hello ${input?.text ?? "world"}`,
       };
     }),
-  // items: t.procedure
-  // .input(
-  //   z
-  //   .object({
-  //     name: z.string()
-  //   }).nullish()
-  //   )
-  //   .query(({input})=>
-  //   {
-  //     return{
-
-  //     }
-  //   })
+  createFaction: t.procedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await prisma.faction.create({ data: { name: input.name } });
+      console.log("hello");
+      return { success: `Success: Faction, ${input.name}, added!`, status: 200 };
+    }),
 });
 
 // export type definition of API

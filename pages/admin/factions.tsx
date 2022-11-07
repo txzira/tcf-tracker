@@ -6,6 +6,8 @@ import { FloatingInputRef } from "../../components/Form";
 import { Data } from "../../types/response";
 import router from "next/router";
 import prisma from "../../lib/prisma";
+import { trpc } from "../../utils/trpc";
+
 import { getToken } from "next-auth/jwt";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
@@ -28,33 +30,32 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Factions = ({ factions }: { factions: Faction[] }) => {
   const factionName = useRef<HTMLInputElement>(null);
-  const createFaction = async (event: any) => {
-    event.preventDefault();
+  const mutation = trpc.createFaction.useMutation();
+  const createFaction = async () => {
     console.log(factionName.current?.value);
-    const getRes = await fetch("/api/admin/faction/create-faction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: factionName.current?.value }),
-    });
-    const res: Data = await getRes.json();
+    // const getRes = await fetch("/api/admin/faction/create-faction", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ name: factionName.current?.value }),
+    // });
+    // const res: Data = await getRes.json();
+    mutation.mutate({ name: factionName.current?.value });
+    // const faction = await trpc.createFaction.useMutation({ name: factionName.current?.value.toString() });
+    // console.log(faction.data?.success);
 
-    if (res.status.toString().startsWith("2")) {
-      toast.success(res.message);
-      router.reload();
-    }
+    // if (res.status.toString().startsWith("2")) {
+    //   toast.success(res.message);
+    //   router.reload();
+    // }
   };
   return (
     <div>
       <h1>Faction</h1>
       <div className="flex flex-row items-center gap-x-2">
         <FloatingInputRef name="factionName" id="factionName" ref={factionName} label="Faction Name" />
-        <button
-          type="button"
-          className="px-2 border rounded-lg bg-green-500 text-white border-black"
-          onClick={(event) => createFaction(event)}
-        >
+        <button type="button" className="px-2 border rounded-lg bg-green-500 text-white border-black" onClick={createFaction}>
           Add
         </button>
       </div>
