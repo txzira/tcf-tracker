@@ -7,16 +7,24 @@ import { Data } from "../../types/response";
 import prisma from "../../lib/prisma";
 import { Faction, Quest } from "@prisma/client";
 import Modal from "../../components/Modal";
+import { getToken } from "next-auth/jwt";
 
 type quest = Quest & { faction: Faction };
 
-export const getStaticProps: GetServerSideProps = async ({ req }) => {
-  const quests = await prisma.quest.findMany({ include: { faction: true, questRequirement: true } });
-  const factions = await prisma.faction.findMany();
-
-  return {
-    props: { quests, factions },
-  };
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
+  if (token?.role === "admin") {
+    const quests = await prisma.quest.findMany({ include: { faction: true, questRequirement: true } });
+    const factions = await prisma.faction.findMany();
+    console.log(factions);
+    return {
+      props: { quests, factions },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) => {
@@ -61,7 +69,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: questId, name: questName, factionId: factionId }),
+      // body: JSON.stringify({ id: questId, name: questName, factionId: factionId }),
     });
     const res: Data = await getRes.json();
     if (res.status.toString().startsWith("2")) {

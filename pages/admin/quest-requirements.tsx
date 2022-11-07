@@ -1,18 +1,26 @@
 import { QuestRequirement } from "@prisma/client";
 import { GetServerSideProps } from "next";
+import { getToken } from "next-auth/jwt";
 import React, { useRef } from "react";
 import toast from "react-hot-toast";
 import { FloatingInputRef } from "../../components/Form";
 import prisma from "../../lib/prisma";
 import { Data } from "../../types/response";
 
-export const getStaticProps: GetServerSideProps = async ({ req }) => {
-  const questRequirements = await prisma.questRequirement.findMany();
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
+  if (token?.role === "admin") {
+    const questRequirements = await prisma.questRequirement.findMany();
 
-  console.log(questRequirements);
-  return {
-    props: { questRequirements },
-  };
+    console.log(questRequirements);
+    return {
+      props: { questRequirements },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 const QuestRequirements = ({ questRequirements }: { questRequirements: QuestRequirement[] }) => {

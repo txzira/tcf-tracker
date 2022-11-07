@@ -18,7 +18,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <a>Quests</a>
           </Link>
           <Link href="/admin/questrequirements">
-            <a>Quest Requirements</a>
+            <a>QuestRequirements</a>
           </Link>
         </nav>
         <div>{children}</div>

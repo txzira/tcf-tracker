@@ -18,6 +18,19 @@ export const appRouter = t.router({
         greeting: `hello ${input?.text ?? "world"}`,
       };
     }),
+  // items: t.procedure
+  // .input(
+  //   z
+  //   .object({
+  //     name: z.string()
+  //   }).nullish()
+  //   )
+  //   .query(({input})=>
+  //   {
+  //     return{
+
+  //     }
+  //   })
 });
 
 // export type definition of API

@@ -6,14 +6,24 @@ import { FloatingInputRef } from "../../components/Form";
 import { Data } from "../../types/response";
 import router from "next/router";
 import prisma from "../../lib/prisma";
+import { getToken } from "next-auth/jwt";
 
-export const getStaticProps: GetServerSideProps = async ({ req }) => {
-  const factions = await prisma.faction.findMany();
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
+  if (token?.role === "admin") {
+    const factions = await prisma.faction.findMany();
+    await prisma.$disconnect();
+    console.log(factions);
 
-  console.log(factions);
-  return {
-    props: { factions },
-  };
+    console.log("token", token);
+    return {
+      props: { factions },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 const Factions = ({ factions }: { factions: Faction[] }) => {

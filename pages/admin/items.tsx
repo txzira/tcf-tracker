@@ -8,14 +8,22 @@ import { Data } from "../../types/response";
 import fs from "fs";
 import prisma from "../../lib/prisma";
 import Image from "next/image";
+import { getToken } from "next-auth/jwt";
 
-export const getStaticProps: GetServerSideProps = async ({ req }) => {
-  const items = await prisma.item.findMany();
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
+  if (token?.role === "admin") {
+    const items = await prisma.item.findMany();
 
-  console.log(items);
-  return {
-    props: { items },
-  };
+    console.log(items);
+    return {
+      props: { items },
+    };
+  } else {
+    return {
+      props: {},
+    };
+  }
 };
 
 const Items = ({ items }: { items: Item[] }) => {
