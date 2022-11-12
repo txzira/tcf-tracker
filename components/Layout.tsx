@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <header>
         <Navbar />
       </header>
-      <main>{children}</main>
+      <main className="bg-gray-700 text-gray-100">{children}</main>
       <Footer />
     </>
   );
