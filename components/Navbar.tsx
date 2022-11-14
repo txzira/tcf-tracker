@@ -13,7 +13,9 @@ const Navbar = () => {
         <div>
           <button>
             <Link href="/">
-              <Image src="/images/TCF_logo.jpg" width={110} height={64} alt="logo" />
+              <a>
+                <Image src="/images/TCF_logo.jpg" priority={true} width={110} height={64} alt="logo" />
+              </a>
             </Link>
           </button>
         </div>

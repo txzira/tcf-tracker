@@ -84,7 +84,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
       <h1>Quest</h1>
       <div className="flex flex-row items-center gap-x-2">
         <FloatingInputRef name="questName" id="questName" ref={name} label="Quest Name" />
-        <select ref={factionId}>
+        <select ref={factionId} className="text-black">
           <option defaultChecked>--Select Faction--</option>
           {factions &&
             factions.map((faction) => (

@@ -1,6 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
+import prisma from "../../../lib/prisma";
 
 export const t = initTRPC.create();
 
@@ -21,13 +22,33 @@ export const appRouter = t.router({
   createFaction: t.procedure
     .input(
       z.object({
-        name: z.string().optional(),
+        name: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      await prisma.faction.create({ data: { name: input.name } });
-      console.log("hello");
-      return { success: `Success: Faction, ${input.name}, added!`, status: 200 };
+      try {
+        await prisma.faction.create({ data: { name: input.name } });
+        console.log("hello");
+        return { success: `Success: Faction, ${input.name}, added!`, status: 200 };
+      } catch (err: any) {
+        return { message: `Erro: ${err.message}`, status: 400 };
+      }
+    }),
+  createQuest: t.procedure
+    .input(
+      z.object({
+        name: z.string(),
+        factionId: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.quest.create({ data: { name: input.name, factionId: input.factionId } });
+        console.log("hello");
+        return { message: `Success: Quest, ${input.name}, added!`, status: 200 };
+      } catch (err: any) {
+        return { message: `Erro: ${err.message}`, status: 400 };
+      }
     }),
 });
 
