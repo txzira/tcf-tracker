@@ -28,7 +28,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <a>Quests</a>
             </Link>
           </button>
-          <Link href="/admin/questrequirements">
+          <Link href="/admin/quest-requirements">
             <a>QuestRequirements</a>
           </Link>
         </nav>
@@ -36,7 +36,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   } else {
-    return <div>Unauthorized User.</div>;
+    return <div className="md:h-screen">Unauthorized User.</div>;
   }
 };
 
