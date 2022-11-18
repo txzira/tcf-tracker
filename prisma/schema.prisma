@@ -19,6 +19,7 @@ model User {
   name    String?
   role String
   password String @db.Char(60)
+  playerQuest PlayerQuest[]
 }
 
 model Faction{
@@ -33,6 +34,7 @@ model Quest {
   faction Faction @relation(fields: [factionId], references: [id])
   factionId Int 
   questRequirement QuestRequirement[]
+  playerQuest PlayerQuest[]
 }
 
 model QuestRequirement {
@@ -55,3 +57,11 @@ model Item{
   questRequirement QuestRequirement[]
 }
 
+model PlayerQuest{
+  id Int @default(autoincrement()) @id
+  playerId Int 
+  user User @relation(fields: [playerId], references: [id])
+  questId Int
+  quest Quest @relation(fields:[questId], references:[id])
+  completed Boolean
+}

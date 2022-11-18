@@ -1,23 +1,24 @@
 import { GetServerSideProps } from "next";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Faction } from "@prisma/client";
 import toast from "react-hot-toast";
-import { FloatingInputRef } from "../../components/Form";
+import { FloatingInput } from "../../components/Form";
 import { Data } from "../../types/response";
 import router from "next/router";
 import prisma from "../../lib/prisma";
 import { trpc } from "../../utils/trpc";
 
 import { getToken } from "next-auth/jwt";
+import { FactionModal } from "../../components/Modal";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
   if (token?.role === "admin") {
     const factions = await prisma.faction.findMany();
     await prisma.$disconnect();
-    console.log(factions);
+    // console.log(factions);
 
-    console.log("token", token);
+    // console.log("token", token);
     return {
       props: { factions },
     };
@@ -29,41 +30,65 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 };
 
 const Factions = ({ factions }: { factions: Faction[] }) => {
-  const factionName = useRef<HTMLInputElement>(null);
-  const mutation = trpc.createFaction.useMutation();
-  const createFaction = async () => {
-    console.log(factionName.current?.value);
-    // const getRes = await fetch("/api/admin/faction/create-faction", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ name: factionName.current?.value }),
-    // });
-    // const res: Data = await getRes.json();
-    mutation.mutate({ name: factionName.current?.value });
-    // const faction = await trpc.createFaction.useMutation({ name: factionName.current?.value.toString() });
-    // console.log(faction.data?.success);
+  const [factionName, setFactionName] = useState<string>("");
+  const [show, setShow] = useState<boolean>(false);
+  const [faction, setFaction] = useState<Faction>();
+  const createFactionTrpc = trpc.createFaction.useMutation();
+  const deleteFactionTrpc = trpc.deleteFaction.useMutation();
 
-    // if (res.status.toString().startsWith("2")) {
-    //   toast.success(res.message);
-    //   router.reload();
-    // }
+  const openModal = (faction: Faction) => {
+    setFaction(faction);
+    setShow(true);
   };
+
+  const createFaction = async () => {
+    if (factionName) {
+      try {
+        await createFactionTrpc.mutateAsync({ name: factionName });
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    } else {
+      toast.error("Empty faction name.");
+    }
+  };
+
+  const deleteFaction = async (factionId: number, factionName: string) => {
+    try {
+      await deleteFactionTrpc.mutateAsync({ name: factionName, factionId: factionId });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (createFactionTrpc.isSuccess) {
+      toast.success(createFactionTrpc.data.message);
+      router.reload();
+    }
+    if (deleteFactionTrpc.isSuccess) {
+      toast.success(deleteFactionTrpc.data.message);
+      router.reload();
+    }
+  }, [createFactionTrpc]);
+
   return (
     <div>
       <h1>Faction</h1>
-      <div className="flex flex-row items-center gap-x-2">
-        <FloatingInputRef name="factionName" id="factionName" ref={factionName} label="Faction Name" />
+      <pre>{factionName}</pre>
+      <form className="flex flex-row items-center gap-x-2">
+        <FloatingInput name="factionName" id="factionName" value={factionName} label="Faction Name" onChange={setFactionName} />
         <button type="button" className="px-2 border rounded-lg bg-green-500 text-white border-black" onClick={createFaction}>
           Add
         </button>
-      </div>
+      </form>
       <div>
+        <FactionModal setShow={setShow} show={show} faction={faction} />
         <table>
           <thead>
             <tr>
               <th>Name</th>
+              <th>Actions</th>
             </tr>
           </thead>
           {factions && (
@@ -71,6 +96,18 @@ const Factions = ({ factions }: { factions: Faction[] }) => {
               {factions.map((faction) => (
                 <tr className="text-center" key={faction.id}>
                   <td>{faction.name}</td>
+                  <td>
+                    <button className="m-2 bg-yellow-500 rounded-lg px-2" type="button" onClick={() => openModal(faction)}>
+                      Edit
+                    </button>
+                    <button
+                      className="m-2 bg-red-600 rounded-lg px-2"
+                      type="button"
+                      onClick={() => deleteFaction(faction.id, faction.name)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
               <tr></tr>

@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
 import prisma from "../../../lib/prisma";
@@ -6,19 +6,6 @@ import prisma from "../../../lib/prisma";
 export const t = initTRPC.create();
 
 export const appRouter = t.router({
-  hello: t.procedure
-    .input(
-      z
-        .object({
-          text: z.string().nullish(),
-        })
-        .nullish()
-    )
-    .query(({ input }) => {
-      return {
-        greeting: `hello ${input?.text ?? "world"}`,
-      };
-    }),
   createFaction: t.procedure
     .input(
       z.object({
@@ -28,10 +15,58 @@ export const appRouter = t.router({
     .mutation(async ({ input }) => {
       try {
         await prisma.faction.create({ data: { name: input.name } });
-        console.log("hello");
-        return { success: `Success: Faction, ${input.name}, added!`, status: 200 };
+        return { message: `Faction, ${input.name}, added!`, status: "success" };
       } catch (err: any) {
-        return { message: `Erro: ${err.message}`, status: 400 };
+        if (err.code === "P2002") {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Faction already exist",
+          });
+        }
+        throw err;
+      }
+    }),
+  updateFaction: t.procedure
+    .input(
+      z.object({
+        name: z.string(),
+        factionId: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.faction.update({
+          where: { id: input.factionId },
+          data: {
+            ...(input.name && { name: input.name }),
+          },
+        });
+        return { message: `${input.name}`, status: "success" };
+      } catch (err: any) {
+        if (err.code === "P2002") {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Faction already exist",
+          });
+        }
+        throw err;
+      }
+    }),
+  deleteFaction: t.procedure
+    .input(
+      z.object({
+        factionId: z.number(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.faction.delete({
+          where: { id: input.factionId },
+        });
+        return { message: `Faction, ${input.name}, deleted!`, status: "success" };
+      } catch (err: any) {
+        throw err;
       }
     }),
   createQuest: t.procedure
@@ -44,10 +79,35 @@ export const appRouter = t.router({
     .mutation(async ({ input }) => {
       try {
         await prisma.quest.create({ data: { name: input.name, factionId: input.factionId } });
-        console.log("hello");
-        return { message: `Success: Quest, ${input.name}, added!`, status: 200 };
+        return { message: `Quest, ${input.name}, added!`, status: "success" };
       } catch (err: any) {
-        return { message: `Erro: ${err.message}`, status: 400 };
+        if (err.code === "P2002") {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Quest already exist",
+          });
+        }
+        throw err;
+      }
+    }),
+  updateQuest: t.procedure
+    .input(
+      z.object({
+        name: z.string(),
+        questId: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        await prisma.quest.update({
+          where: { id: input.questId },
+          data: {
+            ...(input.name && { name: input.name }),
+          },
+        });
+        return { message: `${input.name}`, status: "success" };
+      } catch (err: any) {
+        throw err;
       }
     }),
 });

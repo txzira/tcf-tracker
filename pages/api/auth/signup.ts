@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       //hash password
       const hashedPassword = await hashPassword(password);
       //insert new user into database
-      await prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           email: email,
           password: hashedPassword,
@@ -35,7 +35,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           name: name,
         },
       });
-      await prisma.$disconnect();
+      const quests = await prisma.quest.findMany();
+
+      for (let i in quests) {
+        await prisma.playerQuest.create({
+          data: {
+            playerId: newUser.id,
+            questId: quests[i].id,
+            completed: false,
+          },
+        });
+      }
+
+      console.log("User", newUser);
       res.status(200).json({ message: "User created" });
     }
   } else {

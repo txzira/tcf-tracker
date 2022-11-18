@@ -7,8 +7,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   if (session?.user.role === "admin") {
     return (
       <div className="flex flex-row " id="admin-layout">
-        <nav className="flex flex-col bg-black text-gray-100 ">
-          <button className="bg-purple-600 h-10">
+        <nav className="flex flex-col md:h-screen bg-black text-gray-100 ">
+          <button className="bg-purple-600 h-10 ">
             <Link href="/admin">
               <a>Admin Home</a>
             </Link>
@@ -32,7 +32,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <a>QuestRequirements</a>
           </Link>
         </nav>
-        <div>{children}</div>
+        <div className="mx-auto w-2/3">{children}</div>
       </div>
     );
   } else {

@@ -6,8 +6,10 @@ import { FloatingInputRef } from "../../components/Form";
 import { Data } from "../../types/response";
 import prisma from "../../lib/prisma";
 import { Faction, Quest } from "@prisma/client";
-import Modal from "../../components/Modal";
+// import Modal from "../../components/Modal";
 import { getToken } from "next-auth/jwt";
+import { QuestModal } from "../../components/Modal";
+import { trpc } from "../../utils/trpc";
 
 type quest = Quest & { faction: Faction };
 
@@ -28,12 +30,28 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 };
 
 const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) => {
+  const [questName, setQuestName] = useState<string>("");
   const [show, setShow] = useState(false);
+  const [quest, setQuest] = useState<Quest>();
   const name = useRef<HTMLInputElement>(null);
   const factionId = useRef<HTMLSelectElement>(null);
-  console.log(quests);
-  console.log(factions);
+
+  const createQuestTrpc = trpc.createQuest.useMutation();
+  // const deleteQuestTrpc = trpc.deleteQuest.useMutation();
+
+  const openModal = (quest: Quest) => {
+    setQuest(quest);
+    setShow(true);
+  };
+
   const createQuest = async () => {
+    if (questName) {
+      try {
+        await createQuestTrpc.mutateAsync({ name: questName, factionId: 0 });
+      } catch (err: any) {
+        throw err;
+      }
+    }
     const getRes = await fetch("/api/admin/quest/create-quest", {
       method: "POST",
       headers: {
@@ -63,24 +81,9 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
     }
   };
 
-  const updateQuest = async () => {
-    const getRes = await fetch("/api/admin/quest/update-quest", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // body: JSON.stringify({ id: questId, name: questName, factionId: factionId }),
-    });
-    const res: Data = await getRes.json();
-    if (res.status.toString().startsWith("2")) {
-      toast.success(res.message);
-      router.reload();
-    }
-  };
-
   return (
     <div>
-      <Modal show={show} setShow={setShow} />
+      <QuestModal show={show} setShow={setShow} quest={quest} />
       <h1>Quest</h1>
       <div className="flex flex-row items-center gap-x-2">
         <FloatingInputRef name="questName" id="questName" ref={name} label="Quest Name" />
@@ -119,7 +122,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
                     >
                       Delete
                     </button>
-                    <button className="px-2 border rounded-lg bg-yellow-500 text-white border-black" onClick={() => setShow(!show)}>
+                    <button className="px-2 border rounded-lg bg-yellow-500 text-white border-black" onClick={() => openModal(quest)}>
                       Edit
                     </button>
                   </td>

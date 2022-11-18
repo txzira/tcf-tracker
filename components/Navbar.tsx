@@ -8,8 +8,8 @@ const Navbar = () => {
   const { data: session } = useSession();
   // console.log(session);
   return (
-    <div className="w-screen bg-black">
-      <nav className="flex flex-row h-16 justify-center sticky ">
+    <div className="w-full bg-black h-16 ">
+      <nav className="flex flex-row h-16 justify-center">
         <div>
           <button>
             <Link href="/">

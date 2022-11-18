@@ -8,17 +8,13 @@ import AuthForm from "../components/auth/AuthForm";
 import { useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
-  const hello = trpc.hello.useQuery({ text: "client" });
   const { data: session } = useSession();
 
-  if (!hello.data) {
-    return <div>Loading...</div>;
-  }
   return (
-    <>
+    <div className="h-screen">
       {/* <p>{hello.data.greeting}</p> */}
       <LoginButton />
-    </>
+    </div>
   );
 };
 
