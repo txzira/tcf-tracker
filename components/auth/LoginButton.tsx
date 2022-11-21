@@ -6,10 +6,10 @@ const LoginButton = () => {
   const { data: session } = useSession();
   if (session) {
     return (
-      <>
+      <div className="h-16 w-full">
         Signed in as {session.user.email} <br />
         <button onClick={() => signOut()}>Sign Out</button>
-      </>
+      </div>
     );
   }
   return (

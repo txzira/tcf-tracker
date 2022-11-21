@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
 const FormContainer = ({ children }: { children: React.ReactNode }) => (
-  <div className="absolute top-1/2 bg-white border border-black rounded-md ">{children}</div>
+  <div className="absolute top-1/2 text-black bg-white border border-black rounded-md ">{children}</div>
 );
 
 const AuthForm = () => {

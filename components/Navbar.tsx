@@ -7,45 +7,47 @@ import Image from "next/image";
 const Navbar = () => {
   const { data: session } = useSession();
   return (
-    <div className="w-full bg-black h-16 ">
-      <nav className="flex flex-row h-16 justify-center">
-        <div>
-          <button>
-            <Link href="/">
-              <a>
-                <Image src="/images/TCF_logo.jpg" priority={true} width={110} height={64} alt="logo" />
-              </a>
+    <nav className="flex flex-col w-60 h-screen items-center relative">
+      <Image className="blur-[3px] border-none scale-110" src="/images/tcf-image.jpg" layout="fill" objectFit="cover" />
+      <div className="text-center w-full relative ">
+        <Link href="/">
+          <a className="w-full ">
+            <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
+          </a>
+        </Link>
+        <div className="m-auto  w-10/12 border-b-[1px] "></div>
+      </div>
+      <div className="relative w-full text-center font-semibold  text-gray-100">
+        <LoginButton />
+        <div className="m-auto  w-10/12 border-b-[1px] "></div>
+      </div>
+      {session?.user.role && (
+        <div className="relative w-full text-center font-semibold text-gray-100">
+          <button className="h-16 w-full ">
+            <Link href="/admin">
+              <a>Admin</a>
             </Link>
           </button>
+          <div className="m-auto  w-10/12 border-b-[1px] "></div>
         </div>
-        {session?.user.role && (
-          <div className="flex h-16 items-center font-semibold bg-black text-gray-100">
-            <button className="h-16 md:p-2">
-              <Link href="/admin">
-                <a>Admin</a>
-              </Link>
-            </button>
-          </div>
-        )}
-        <div className="flex h-16 items-center font-semibold bg-black text-gray-100">
-          <button className="h-16 md:p-2">
-            <Link href="/quests">
-              <a>Quests</a>
-            </Link>
-          </button>
-        </div>
-        <div className="flex h-16 items-center font-semibold bg-black text-gray-100">
-          <button className="h-16 md:p-2">
-            <Link href="/">
-              <a>Quarters</a>
-            </Link>
-          </button>
-        </div>
-        <div className="flex h-16 items-center font-semibold bg-black text-gray-100">
-          <LoginButton />
-        </div>
-      </nav>
-    </div>
+      )}
+      <div className="relative w-full text-center font-semibold  text-gray-100">
+        <button className="h-16 w-full">
+          <Link href="/quests">
+            <a>Quests</a>
+          </Link>
+        </button>
+        <div className="m-auto  w-10/12 border-b-[1px] "></div>
+      </div>
+      <div className="relative w-full text-center font-semibold text-gray-100">
+        <button className="h-16 w-full">
+          <Link href="/">
+            <a>Quarters</a>
+          </Link>
+        </button>
+        <div className="m-auto  w-10/12 border-b-[1px] "></div>
+      </div>
+    </nav>
   );
 };
 
