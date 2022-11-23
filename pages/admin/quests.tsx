@@ -100,7 +100,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
           Add
         </button>
       </div>
-      <div>
+      <div className="">
         <table>
           <thead>
             <tr>

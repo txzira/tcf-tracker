@@ -2,23 +2,27 @@ import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
-const LoginButton = () => {
+export const SignoutButton = () => {
   const { data: session } = useSession();
   if (session) {
     return (
-      <div className="h-16 w-full">
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign Out</button>
-      </div>
+      <button className="flex items-center justify-center h-16 w-full" onClick={() => signOut()}>
+        Sign Out
+      </button>
     );
+  } else {
+    return null;
   }
-  return (
-    <>
-      <Link href="/auth">
-        <a>Sign In</a>
-      </Link>
-    </>
-  );
 };
 
-export default LoginButton;
+export const LoginButton = () => {
+  const { data: session } = useSession();
+  if (session) {
+    return <div className="flex items-center justify-center h-16 w-full">{session.user.email}</div>;
+  }
+  return (
+    <Link href="/auth">
+      <a className="flex items-center justify-center h-16 w-full">Sign In</a>
+    </Link>
+  );
+};

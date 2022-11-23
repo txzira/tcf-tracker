@@ -81,7 +81,7 @@ const Items = ({ items }: { items: Item[] }) => {
           Add
         </button>
       </form>
-      <div>
+      <div className="overflow-scroll">
         <table>
           <thead>
             <tr>

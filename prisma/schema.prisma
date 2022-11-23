@@ -66,6 +66,7 @@ model PlayerQuest{
   questId Int
   quest Quest @relation(fields:[questId], references:[id])
   completed Boolean
+  @@unique([playerId,questId])
 }
 
 model PlayerRequirement{

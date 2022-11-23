@@ -14,7 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <header className="">
           <Navbar />
         </header>
-        <main className="bg-gray-700 text-gray-100 h-full w-full">{children}</main>
+        <main className="bg-gray-700 text-gray-100 h-screen w-full overflow-y-scroll">{children}</main>
       </div>
       <Footer />
     </>
