@@ -3,6 +3,7 @@ import React from "react";
 import { LoginButton, SignoutButton } from "../components/auth/LoginButton";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { IoMdFingerPrint } from "react-icons/io";
 
 const NavItem = ({ label, href }: { label: string; href: string }) => {
   const { data: session } = useSession();

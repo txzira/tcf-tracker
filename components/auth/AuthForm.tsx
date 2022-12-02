@@ -1,9 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 
 const FormContainer = ({ children }: { children: React.ReactNode }) => (
-  <div className="absolute top-1/2 text-black bg-white border border-black rounded-md ">{children}</div>
+  <div className="relative m-auto w-1/2 before:bg-opacity-10 before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
+    <div className="relative text-black bg-white border border-black rounded-md bg-opacity-30 ">{children}</div>
+  </div>
 );
 
 const AuthForm = () => {
@@ -43,6 +46,7 @@ const AuthForm = () => {
 
   return (
     <FormContainer>
+      <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
       <h1 className="text-center text-lg md:p-2">{isLogin ? "Login" : "Sign Up"}</h1>
       <form className="text-center" onSubmit={submitHandler}>
         <pre>

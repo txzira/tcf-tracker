@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -34,6 +32,8 @@ model Quest {
   name String @db.VarChar(200) @unique
   faction Faction @relation(fields: [factionId], references: [id])
   factionId Int 
+  availabilityFilter String @default("none")
+  mapFilter String @default("none")
   questRequirement QuestRequirement[]
   playerQuest PlayerQuest[]
 }

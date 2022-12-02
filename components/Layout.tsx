@@ -14,9 +14,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <header className="">
           <Navbar />
         </header>
-        <main className="bg-gray-700 text-gray-100 h-screen w-full overflow-y-scroll">{children}</main>
+        <main className="bg-gradient-to-b from-black to-gray-800 text-gray-100 h-screen w-full overflow-y-scroll">
+          {children}
+          <Footer />
+        </main>
       </div>
-      <Footer />
     </>
   );
 };

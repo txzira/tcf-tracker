@@ -21,7 +21,7 @@ export const LoginButton = () => {
     return <div className="flex items-center justify-center h-16 w-full">{session.user.email}</div>;
   }
   return (
-    <Link href="/auth">
+    <Link href="/login">
       <a className="flex items-center justify-center h-16 w-full">Sign In</a>
     </Link>
   );
