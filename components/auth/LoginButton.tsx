@@ -1,6 +1,7 @@
 import React from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { IoMdFingerPrint } from "react-icons/io";
 
 export const SignoutButton = () => {
   const { data: session } = useSession();
@@ -22,7 +23,10 @@ export const LoginButton = () => {
   }
   return (
     <Link href="/login">
-      <a className="flex items-center justify-center h-16 w-full">Sign In</a>
+      <a className="flex items-center justify-center h-16 w-full">
+        <IoMdFingerPrint />
+        Sign In
+      </a>
     </Link>
   );
 };

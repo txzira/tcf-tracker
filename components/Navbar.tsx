@@ -3,15 +3,15 @@ import React from "react";
 import { LoginButton, SignoutButton } from "../components/auth/LoginButton";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { IoMdFingerPrint } from "react-icons/io";
+import { BsClipboardCheck } from "react-icons/bs";
 
-const NavItem = ({ label, href }: { label: string; href: string }) => {
+const NavItem = ({ children, href }: { children: React.ReactNode; href: string }) => {
   const { data: session } = useSession();
 
   return (
     <div className="relative w-full font-semibold  text-gray-100">
       <Link href={href}>
-        <a className="flex items-center justify-center h-16 w-full">{label}</a>
+        <a className="flex items-center justify-center h-16 w-full">{children}</a>
       </Link>
       <div className="m-auto  w-10/12 border-b-[1px] "></div>
     </div>
@@ -35,10 +35,12 @@ const Navbar = () => {
         <LoginButton />
         <div className="m-auto  w-10/12 border-b-[1px] "></div>
       </div>
-      {session?.user.role && <NavItem label="Admin" href="/admin" />}
-      <NavItem label="Quests" href="/quests" />
-      <NavItem label="Quarters" href="/" />
-      <NavItem label="Items" href="/" />
+      {session?.user.role === "admin" ? <NavItem href="/admin">Admin</NavItem> : null}
+      <NavItem href="/quests">
+        <BsClipboardCheck /> Quests
+      </NavItem>
+      <NavItem href="/">Quarters</NavItem>
+      <NavItem href="/">Items</NavItem>
 
       <div className="relative w-full font-semibold text-gray-100">
         <SignoutButton />

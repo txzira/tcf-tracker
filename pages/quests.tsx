@@ -5,6 +5,7 @@ import prisma from "../lib/prisma";
 import { Faction, Item, PlayerQuest, Quest, QuestRequirement } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { RiCheckDoubleLine } from "react-icons/ri";
+import { BsClipboardCheck } from "react-icons/bs";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
@@ -70,12 +71,15 @@ const Quests = ({
 
         <div className="w-11/12 grid gap-5 grid-cols-3 ">
           <div className="grid grid-cols-3 justify-center bg-slate-800 h-12 px-10" id="filters">
-            <button
-              className={`border hover:bg-slate-500 ${filterType === "All" ? "bg-slate-500" : ""}`}
-              onClick={() => setFilterType("All")}
-            >
-              All
-            </button>
+            <div className="flex">
+              <button
+                className={`flex items-center border hover:bg-slate-500 ${filterType === "All" ? "bg-slate-500" : ""}`}
+                onClick={() => setFilterType("All")}
+              >
+                <BsClipboardCheck />
+                All
+              </button>
+            </div>
             <button
               className={`border hover:bg-slate-500 ${filterType === "Maps" ? "bg-slate-500" : ""}`}
               onClick={() => setFilterType("Maps")}

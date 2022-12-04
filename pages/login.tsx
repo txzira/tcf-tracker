@@ -1,9 +1,9 @@
 import React from "react";
-import AuthForm from "../components/auth/AuthForm";
+import { AuthForm } from "../components/auth/AuthForm";
 
 const Login = () => {
   return (
-    <div className="flex w-full h-full  ">
+    <div className="flex w-full h-full">
       <AuthForm />
     </div>
   );
