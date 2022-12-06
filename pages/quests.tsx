@@ -57,9 +57,9 @@ const Quests = ({
   const [questFilter, setQuestFilter] = useState("None");
   const [availabilityFilter, setAvailabilityFilter] = useState("Available");
 
-  console.log(playerQuests);
+  // console.log(playerQuests);
   const session = useSession();
-  console.log(factions);
+  // console.log(factions);
 
   if (session.status === "authenticated") {
     return (

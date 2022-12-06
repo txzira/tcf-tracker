@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import router from "next/router";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { FloatingInputRef } from "../../components/Form";
+import { FloatingInput, FloatingInputRef } from "../../components/Form";
 import { Data } from "../../types/response";
 import prisma from "../../lib/prisma";
 import { Faction, Quest } from "@prisma/client";
@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (token?.role === "admin") {
     const quests = await prisma.quest.findMany({ include: { faction: true, questRequirement: true } });
     const factions = await prisma.faction.findMany();
-    console.log(factions);
+    // console.log(factions);
     return {
       props: { quests, factions },
     };
@@ -34,6 +34,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
   const [show, setShow] = useState(false);
   const [quest, setQuest] = useState<Quest>();
   const name = useRef<HTMLInputElement>(null);
+  const [id, setId] = useState(0);
   const factionId = useRef<HTMLSelectElement>(null);
 
   const createQuestTrpc = trpc.createQuest.useMutation();
@@ -47,24 +48,26 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
   const createQuest = async () => {
     if (questName) {
       try {
-        await createQuestTrpc.mutateAsync({ name: questName, factionId: 0 });
+        const request = await createQuestTrpc.mutateAsync({ name: questName, factionId: Number(factionId.current?.value) });
+        request.status === "success" ? toast.success(request.message) : toast.error(request.message);
+        router.reload();
       } catch (err: any) {
         throw err;
       }
     }
-    const getRes = await fetch("/api/admin/quest/create-quest", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: name.current?.value, factionId: factionId.current?.value }),
-    });
-    const res: Data = await getRes.json();
+    // const getRes = await fetch("/api/admin/quest/create-quest", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ name: name.current?.value, factionId: factionId.current?.value }),
+    // });
+    // const res: Data = await getRes.json();
 
-    if (res.status.toString().startsWith("2")) {
-      toast.success(res.message);
-      router.reload();
-    }
+    // if (res.status.toString().startsWith("2")) {
+    //   toast.success(res.message);
+    //   router.reload();
+    // }
   };
   const deleteQuest = async (questId: number, questName: string) => {
     const getRes = await fetch("/api/admin/quest/delete-quest", {
@@ -86,7 +89,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
       <QuestModal show={show} setShow={setShow} quest={quest} />
       <h1>Quest</h1>
       <div className="flex flex-row items-center gap-x-2">
-        <FloatingInputRef name="questName" id="questName" ref={name} label="Quest Name" />
+        <FloatingInput name="questName" id="questName" value={questName} onChange={setQuestName} label="Quest Name" />
         <select ref={factionId} className="text-black">
           <option defaultChecked>--Select Faction--</option>
           {factions &&
@@ -96,7 +99,7 @@ const Quests = ({ quests, factions }: { quests: quest[]; factions: Faction[] }) 
               </option>
             ))}
         </select>
-        <button type="button" className="px-2 border rounded-lg bg-green-500 text-white border-black" onClick={createQuest}>
+        <button type="button" className="px-2 border rounded-lg bg-green-500 text-white border-black" onClick={() => createQuest()}>
           Add
         </button>
       </div>

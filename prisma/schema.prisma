@@ -40,9 +40,9 @@ model Quest {
 
 model QuestRequirement {
   id Int @default(autoincrement()) @id
-  quest Quest @relation(fields: [questId], references: [id])
+  quest Quest @relation(fields: [questId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   questId Int
-  item Item? @relation(fields: [itemId], references: [id])
+  item Item? @relation(fields: [itemId], references: [id], onUpdate: Cascade)
   itemId Int?
   task String?
   quantity Int
@@ -60,19 +60,19 @@ model Item{
 }
 
 model PlayerQuest{
-  id Int @default(autoincrement()) @id
   playerId Int 
-  user User @relation(fields: [playerId], references: [id])
+  user User @relation(fields: [playerId], references: [id], onDelete: Cascade,onUpdate: Cascade)
   questId Int
-  quest Quest @relation(fields:[questId], references:[id])
+  quest Quest @relation(fields:[questId], references:[id], onDelete: Cascade, onUpdate: Cascade)
   completed Boolean
   @@unique([playerId,questId])
 }
 
 model PlayerRequirement{
-  id Int @default(autoincrement()) @id
   playerId Int
-  user User @relation(fields: [playerId], references: [id])
+  user User @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   questRequirementId Int
-  questRequirement QuestRequirement @relation(fields: [questRequirementId], references: [id])
+  questRequirement QuestRequirement @relation(fields: [questRequirementId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  completed Boolean
+  @@unique([playerId,questRequirementId])
 }

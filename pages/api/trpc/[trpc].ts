@@ -78,8 +78,17 @@ export const appRouter = t.router({
     )
     .mutation(async ({ input }) => {
       try {
-        await prisma.quest.create({ data: { name: input.name, factionId: input.factionId } });
-        return { message: `Quest, ${input.name}, added!`, status: "success" };
+        //create create
+        console.log("hello");
+        const quest = await prisma.quest.create({ data: { name: input.name, factionId: input.factionId } });
+        //add quest to quest list of all existing users
+        const users = await prisma.user.findMany({ select: { id: true } });
+        users.map(async (user) => {
+          const playerQuest = await prisma.playerQuest.create({ data: { playerId: user.id, questId: quest.id, completed: false } });
+
+          console.log(playerQuest);
+        });
+        return { message: `Quest: ${input.name} and ${users[0].id} added!`, status: "success" };
       } catch (err: any) {
         if (err.code === "P2002") {
           throw new TRPCError({
