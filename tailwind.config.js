@@ -6,6 +6,9 @@ module.exports = {
       colors: {
         darks5: "rgb(18,28,37)",
       },
+      fontFamily: {
+        cycle: ["Agency FB"],
+      },
     },
   },
   plugins: [],

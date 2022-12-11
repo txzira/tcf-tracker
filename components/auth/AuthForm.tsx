@@ -5,17 +5,28 @@ import Image from "next/image";
 import { FloatingInput } from "../Form";
 import { AiFillMail, AiFillLock } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
+import Link from "next/link";
 const FormContainer = ({ children }: { children: React.ReactNode }) => (
   <div className="relative m-auto w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
     <div className="relative w-full p-5 text-black bg-white border  border-black rounded-md bg-opacity-30 ">{children}</div>
   </div>
 );
 
-const FormItem = ({ children }: { children: React.ReactNode }) => <div className="flex flex-row items-center w-1/2 m-auto">{children}</div>;
+const FormItem = ({ children }: { children: React.ReactNode }) => <div className="relative w-1/2 m-auto mb-3">{children}</div>;
+
+const FormIcon = ({ children }: { children: React.ReactNode }) => (
+  <span className="absolute opacity-40 top-4 left-7 text-lg">{children}</span>
+);
+
+const FormButton = ({ children }: { children: React.ReactNode }) => (
+  <FormItem>
+    <button className="bg-slate-800  w-full text-white py-3 px-6  rounded-3xl">{children}</button>
+  </FormItem>
+);
+
 export const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const router = useRouter();
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,16 +43,16 @@ export const AuthForm = () => {
 
   return (
     <FormContainer>
-      <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
-      <h1 className="text-left text-lg md:p-2">Login</h1>
       <form className="w-full text-center" onSubmit={submitHandler}>
+        <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
+        <h1 className="text-white font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Login</h1>
         <FormItem>
-          <label htmlFor="email" className="px-2.5">
+          <FormIcon>
             <AiFillMail />
-          </label>
+          </FormIcon>
           <input
             required
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none"
+            className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             id="email"
             type="email"
             placeholder="Email"
@@ -50,12 +61,12 @@ export const AuthForm = () => {
           />
         </FormItem>
         <FormItem>
-          <label htmlFor="password" className="px-2.5">
+          <FormIcon>
             <AiFillLock />
-          </label>
+          </FormIcon>
           <input
             required
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none "
+            className="text-black w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             id="password"
             type="password"
             placeholder="****"
@@ -64,15 +75,17 @@ export const AuthForm = () => {
           />
         </FormItem>
         <FormButton>Login</FormButton>
+        <div>
+          Don't have an account yet?{" "}
+          <Link href="/signup">
+            <a className="text-blue-800 underline">Create a free account</a>
+          </Link>
+          .
+        </div>
       </form>
     </FormContainer>
   );
 };
-const FormButton = ({ children }: { children: React.ReactNode }) => (
-  <div className="m-auto py-2.5">
-    <button className="bg-slate-800 text-white px-3 py-1 border border-slate-800 rounded-3xl">{children}</button>
-  </div>
-);
 
 export const SignupForm = () => {
   const [email, setEmail] = useState("");
@@ -98,18 +111,16 @@ export const SignupForm = () => {
 
   return (
     <FormContainer>
-      <div className="flex justify-center">
-        <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
-      </div>
-      <h1 className="text-center text-lg md:p-2">Registration</h1>
       <form className="w-full text-center" onSubmit={submitHandler}>
+        <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" />
+        <h1 className="text-white font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Registration</h1>
         <FormItem>
-          <label htmlFor="email" className="pr-2.5">
+          <FormIcon>
             <AiFillMail />
-          </label>
+          </FormIcon>
           <input
             required
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none"
+            className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             placeholder="Email"
             id="email"
             type="email"
@@ -118,24 +129,24 @@ export const SignupForm = () => {
           />
         </FormItem>
         <FormItem>
-          <label htmlFor="name" className="pr-2.5">
+          <FormIcon>
             <BsFillPersonFill />
-          </label>
+          </FormIcon>
           <input
             type="text"
             id="name"
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none"
+            className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             placeholder="John Doe"
             ref={name}
           />
         </FormItem>
         <FormItem>
-          <label htmlFor="password" className="pr-2.5">
+          <FormIcon>
             <AiFillLock />
-          </label>
+          </FormIcon>
           <input
             required
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none"
+            className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             id="password"
             type="password"
             placeholder="Password"
@@ -144,19 +155,26 @@ export const SignupForm = () => {
           />
         </FormItem>
         <FormItem>
-          <label htmlFor="confirmPassword" className="pr-2.5">
+          <FormIcon>
             <AiFillLock />
-          </label>
+          </FormIcon>
           <input
             required
-            className="text-center border rounded-3xl p-2 focus:bg-white focus:outline-none"
+            className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
             type="password"
             id="confirmPassword"
             placeholder="Confirm Password"
             ref={confirmPassword}
           />
         </FormItem>
-        <FormButton>Signup</FormButton>
+        <FormButton>Sign Up</FormButton>
+        <div>
+          Already have an account?{" "}
+          <Link href="/login">
+            <a className="text-blue-800 underline">Sign In</a>
+          </Link>
+          .
+        </div>
       </form>
     </FormContainer>
   );

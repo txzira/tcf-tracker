@@ -4,8 +4,10 @@ import { getToken } from "next-auth/jwt";
 import prisma from "../lib/prisma";
 import { Faction, Item, PlayerQuest, Quest, QuestRequirement } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { RiCheckDoubleLine } from "react-icons/ri";
-import { BsClipboardCheck } from "react-icons/bs";
+import { RiCheckDoubleLine, RiUserFill } from "react-icons/ri";
+import { BsClipboardCheck, BsPerson } from "react-icons/bs";
+import { FaClipboardCheck } from "react-icons/fa";
+import { IoMdCompass } from "react-icons/io";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = await getToken({ req: req, secret: process.env.JWT_SECRET });
@@ -57,7 +59,7 @@ const Quests = ({
   const [questFilter, setQuestFilter] = useState("None");
   const [availabilityFilter, setAvailabilityFilter] = useState("Available");
 
-  // console.log(playerQuests);
+  console.log(playerQuests);
   const session = useSession();
   // console.log(factions);
 
@@ -71,25 +73,26 @@ const Quests = ({
 
         <div className="w-11/12 grid gap-5 grid-cols-3 ">
           <div className="grid grid-cols-3 justify-center bg-slate-800 h-12 px-10" id="filters">
-            <div className="flex">
-              <button
-                className={`flex items-center border hover:bg-slate-500 ${filterType === "All" ? "bg-slate-500" : ""}`}
-                onClick={() => setFilterType("All")}
-              >
-                <BsClipboardCheck />
-                All
-              </button>
-            </div>
             <button
-              className={`border hover:bg-slate-500 ${filterType === "Maps" ? "bg-slate-500" : ""}`}
+              className={`flex items-center justify-center border hover:bg-slate-500 ${filterType === "All" ? "bg-slate-500" : ""}`}
+              onClick={() => setFilterType("All")}
+            >
+              <FaClipboardCheck size={16} />
+              All
+            </button>
+
+            <button
+              className={`flex items-center justify-center border hover:bg-slate-500 ${filterType === "Maps" ? "bg-slate-500" : ""}`}
               onClick={() => setFilterType("Maps")}
             >
+              <IoMdCompass size={16} />
               Maps
             </button>
             <button
-              className={`border hover:bg-slate-500 ${filterType === "Factions" ? "bg-slate-500" : ""}`}
+              className={`flex items-center justify-center border hover:bg-slate-500 ${filterType === "Factions" ? "bg-slate-500" : ""}`}
               onClick={() => setFilterType("Factions")}
             >
+              <RiUserFill size={16} />
               Factions
             </button>
           </div>

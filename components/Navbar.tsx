@@ -5,6 +5,9 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { BsClipboardCheck } from "react-icons/bs";
 import { AiOutlineHome, AiOutlineGold } from "react-icons/ai";
+import { GrUserAdmin } from "react-icons/gr";
+import { RiAdminLine } from "react-icons/ri";
+import { IconContext } from "react-icons";
 
 const NavItem = ({ children, href }: { children: React.ReactNode; href: string }) => {
   const { data: session } = useSession();
@@ -36,7 +39,12 @@ const Navbar = () => {
         <LoginButton />
         <div className="m-auto  w-10/12 border-b-[1px] "></div>
       </div>
-      {session?.user.role === "admin" ? <NavItem href="/admin">Admin</NavItem> : null}
+      {session?.user.role === "admin" ? (
+        <NavItem href="/admin">
+          <RiAdminLine color="white" />
+          Admin
+        </NavItem>
+      ) : null}
       <NavItem href="/quests">
         <BsClipboardCheck />
         Quests

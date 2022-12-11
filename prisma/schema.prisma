@@ -4,11 +4,10 @@
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  relationMode  = "prisma"
 }
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
@@ -33,9 +32,10 @@ model Quest {
   faction Faction @relation(fields: [factionId], references: [id])
   factionId Int 
   availabilityFilter String @default("none")
-  mapFilter String @default("none")
   questRequirement QuestRequirement[]
   playerQuest PlayerQuest[]
+
+  @@index([factionId])
 }
 
 model QuestRequirement {
@@ -46,7 +46,10 @@ model QuestRequirement {
   itemId Int?
   task String?
   quantity Int
+  mapFilter String @default("none")
   playerRequirement PlayerRequirement[]
+  @@index([questId])
+  @@index([itemId])
 }
 
 model Item{
@@ -66,6 +69,8 @@ model PlayerQuest{
   quest Quest @relation(fields:[questId], references:[id], onDelete: Cascade, onUpdate: Cascade)
   completed Boolean
   @@unique([playerId,questId])
+  @@index([playerId])
+  @@index([questId])
 }
 
 model PlayerRequirement{
@@ -75,4 +80,6 @@ model PlayerRequirement{
   questRequirement QuestRequirement @relation(fields: [questRequirementId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   completed Boolean
   @@unique([playerId,questRequirementId])
+  @@index([playerId])
+  @@index([questRequirementId])
 }
