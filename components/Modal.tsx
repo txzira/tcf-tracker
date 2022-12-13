@@ -28,7 +28,6 @@ export const FactionModal = ({
     } catch (err: any) {
       toast.error(err.message);
     }
-    console.log(id);
   };
 
   function closeOrderDetails() {

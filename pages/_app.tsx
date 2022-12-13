@@ -10,7 +10,6 @@ import Layout from "../components/Layout";
 import path from "path";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps }, router }: AppProps<{ session: Session }>) => {
-  console.log(router.pathname);
   return (
     <SessionProvider session={session}>
       <Layout>

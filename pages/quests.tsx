@@ -59,7 +59,6 @@ const Quests = ({
   const [questFilter, setQuestFilter] = useState("None");
   const [availabilityFilter, setAvailabilityFilter] = useState("Available");
 
-  console.log(playerQuests);
   const session = useSession();
   // console.log(factions);
 
@@ -187,7 +186,7 @@ const Quests = ({
             {playerQuests &&
               playerQuests.map((quest) => (
                 <div className="flex flex-col w-full">
-                  <div key={quest.id} className="grid grid-cols-4 text-center py-4">
+                  <div key={quest.questId} className="grid grid-cols-4 text-center py-4">
                     <div>{quest.quest.name}</div>
                     <div>{quest.completed ? "Completed" : "Incomplete"}</div>
                     <div>
