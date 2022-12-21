@@ -2,27 +2,25 @@ import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
+const NavLink = ({ children, href }: { children: React.ReactNode; href: string }) => {
+  return (
+    <Link href={href} className="flex items-center h-10">
+      {children}
+    </Link>
+  );
+};
+
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
   if (session?.user.role === "admin") {
     return (
       <div className="flex flex-col" id="admin-layout">
         <nav className="flex flex-row text-gray-100 ">
-          <Link href="/admin">
-            <a className="flex items-center h-10 bg-purple-600">Admin Home</a>
-          </Link>
-          <Link href="/admin/factions">
-            <a className="flex items-center h-10">Factions</a>
-          </Link>
-          <Link href="/admin/items">
-            <a className="flex items-center h-10">Items</a>
-          </Link>
-          <Link href="/admin/quests">
-            <a className="flex items-center h-10">Quests</a>
-          </Link>
-          <Link href="/admin/quest-requirements">
-            <a className="flex items-center h-10">QuestRequirements</a>
-          </Link>
+          <NavLink href="/admin">Admin Home</NavLink>
+          <NavLink href="/admin/factions">Factions</NavLink>
+          <NavLink href="/admin/items">Items</NavLink>
+          <NavLink href="/admin/quests">Quests</NavLink>
+          <NavLink href="/admin/quest-requirements">QuestRequirements</NavLink>
         </nav>
         <div className="mx-auto w-11/12">{children}</div>
       </div>

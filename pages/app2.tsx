@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { trpc } from "../utils/trpc";
 import { Session } from "next-auth";
 import AdminLayout from "../components/auth/AdminLayout";
-import Layout from "../components/Layout";
+import Layout, { LayoutHeading } from "../components/Layout";
 import path from "path";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps }, router }: AppProps<{ session: Session }>) => {
@@ -19,7 +19,11 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps }, router }: AppP
             <Component {...pageProps} />
           </AdminLayout>
         ) : (
-          <Component {...pageProps} />
+          <>
+            <LayoutHeading />
+
+            <Component {...pageProps} />
+          </>
         )}
       </Layout>
     </SessionProvider>

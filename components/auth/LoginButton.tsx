@@ -22,11 +22,9 @@ export const LoginButton = () => {
     return <div className="flex items-center justify-center h-16 w-full">{session.user.email}</div>;
   }
   return (
-    <Link href="/login">
-      <a className="flex items-center justify-center h-16 w-full">
-        <IoMdFingerPrint />
-        Sign In
-      </a>
+    <Link href="/login" className="flex items-center justify-center h-16 w-full">
+      <IoMdFingerPrint />
+      Sign In
     </Link>
   );
 };

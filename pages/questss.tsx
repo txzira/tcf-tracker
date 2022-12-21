@@ -5,7 +5,6 @@ import prisma from "../lib/prisma";
 import { Faction, Item, PlayerQuest, Quest, QuestRequirement } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { RiCheckDoubleLine, RiUserFill } from "react-icons/ri";
-import { BsClipboardCheck, BsPerson } from "react-icons/bs";
 import { FaClipboardCheck } from "react-icons/fa";
 import { IoMdCompass } from "react-icons/io";
 
@@ -29,9 +28,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     });
     const factions = await prisma.faction.findMany();
     await prisma.$disconnect();
-    // console.log(factions);
+    console.log(factions);
 
-    // console.log("token", token);
+    console.log("token", token);
     return {
       props: { playerQuests, factions },
     };
@@ -60,6 +59,7 @@ const Quests = ({
   const [availabilityFilter, setAvailabilityFilter] = useState("Available");
 
   const session = useSession();
+  // console.log(session);
   // console.log(factions);
 
   if (session.status === "authenticated") {
@@ -79,7 +79,6 @@ const Quests = ({
               <FaClipboardCheck size={16} />
               All
             </button>
-
             <button
               className={`flex items-center justify-center border hover:bg-slate-500 ${filterType === "Maps" ? "bg-slate-500" : ""}`}
               onClick={() => setFilterType("Maps")}
