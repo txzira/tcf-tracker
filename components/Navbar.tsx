@@ -59,7 +59,7 @@ const Navbar = () => {
         Quarters
       </NavItem>
       <NavItem href="/">
-        <div className="pr-2">
+        <div className="pr-6">
           <AiFillGold size={25} />
         </div>
         Items

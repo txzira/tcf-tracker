@@ -1,9 +1,7 @@
-import { GetServerSideProps } from "next";
+import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import prisma from "../../lib/prisma";
-import { Faction, Item, PlayerQuest, Quest, QuestRequirement } from "@prisma/client";
 import QuestTable from "./QuestTable";
-import { cookies } from "next/headers";
 
 if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("NEXTAUTH_SECRET is missing");
@@ -21,7 +19,9 @@ const getToken = async () => {
 const getData = async () => {
   const token = await getToken();
   token;
+  console.log(token);
   if (token?.role === "admin" || token?.role === "user") {
+    console.log("hello");
     const playerQuests = await prisma.playerQuest.findMany({
       where: { playerId: token.id },
       include: {
@@ -36,12 +36,14 @@ const getData = async () => {
         },
       },
     });
-    const factions = await prisma.faction.findMany();
+
+    console.log(playerQuests);
+    // const factions = await prisma.faction.findMany();
     await prisma.$disconnect();
-    console.log(factions);
+    // console.log(factions);
 
     return {
-      props: { playerQuests, factions },
+      props: { playerQuests },
     };
   } else {
     return {
@@ -50,19 +52,7 @@ const getData = async () => {
   }
 };
 
-const Quests = async ({
-  playerQuests,
-  factions,
-}: {
-  playerQuests: (PlayerQuest & {
-    quest: Quest & {
-      questRequirement: (QuestRequirement & {
-        item: Item | null;
-      })[];
-    };
-  })[];
-  factions: Faction[];
-}) => {
+const Quests = async () => {
   const data = await getData();
   return (
     <>

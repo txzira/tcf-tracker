@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";

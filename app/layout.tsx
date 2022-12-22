@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="flex flex-row">
+      <body>
         <SessionProvider>
           <Layout>
             <Toaster />
@@ -19,8 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             ) : (
               <>
                 <LayoutHeading />
-
-                {children}
+                <div className="h-full w-full">{children}</div>
               </>
             )}
           </Layout>
