@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <NavContainer>
       <Image className="blur-[3px] border-none scale-110 object-cover " src="/images/tcf-image.jpg" fill={true} alt="Nav Background" />
-      <div className="text-center w-full relative ">
+      <div className="text-center w-full relative">
         <Link href="/" className="w-full">
           <Image src="/images/TCF-logo-nbg.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         </Link>

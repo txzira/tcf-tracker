@@ -1,13 +1,50 @@
 "use client";
 import React from "react";
-import "./globals.css";
-import { Session } from "next-auth";
+import { trpc } from "../utils/trpc";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
-import Layout, { LayoutHeading } from "../components/Layout";
-import AdminLayout from "../components/auth/AdminLayout";
 import { usePathname } from "next/navigation";
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import AdminLayout from "./AdminLayout";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import "./globals.css";
+
+function capitalizeFirstLetter(word: string | null) {
+  if (word === null) return;
+  const firstLetter = word.charAt(0);
+  const firstLetterCap = firstLetter?.toUpperCase();
+  const remainingLetters = word.slice(1);
+  const capitalizeWord = firstLetterCap + remainingLetters;
+  return capitalizeWord;
+}
+
+const LayoutHeading = () => {
+  return (
+    <div className="flex flex-row justify-between w-full">
+      <div>{capitalizeFirstLetter(usePathname()!.replace("/", ""))}</div>
+      <div>hint</div>
+      <div>Search</div>
+    </div>
+  );
+};
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <>
+      <div className="flex flex-row">
+        <header className="">
+          <Navbar />
+        </header>
+        <main className="flex flex-col bg-gradient-to-b from-black to-gray-800 text-gray-100 h-screen w-screen overflow-y-scroll">
+          {children}
+          <Footer />
+        </main>
+      </div>
+    </>
+  );
+};
+
+function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
@@ -28,3 +65,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+export default RootLayout;
