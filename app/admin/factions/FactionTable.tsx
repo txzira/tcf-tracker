@@ -12,8 +12,6 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
   const [factionName, setFactionName] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
   const [faction, setFaction] = useState<Faction>();
-  const createFactionTrpc = trpc.createFaction.useMutation();
-  const deleteFactionTrpc = trpc.deleteFaction.useMutation();
 
   const openModal = (faction: Faction) => {
     setFaction(faction);
@@ -22,8 +20,15 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
 
   const createFaction = async () => {
     if (factionName) {
+      console.log("try");
       try {
-        await createFactionTrpc.mutateAsync({ name: factionName });
+        const response = await fetch("/api/admin/faction/crud", {
+          method: "POST",
+
+          body: JSON.stringify({ factionName }),
+        });
+        console.log(response);
+        // await createFactionTrpc.mutateAsync({ name: factionName });
       } catch (err: any) {
         toast.error(err.message);
       }
@@ -34,22 +39,22 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
 
   const deleteFaction = async (factionId: number, factionName: string) => {
     try {
-      await deleteFactionTrpc.mutateAsync({ name: factionName, factionId: factionId });
+      // await deleteFactionTrpc.mutateAsync({ name: factionName, factionId: factionId });
     } catch (err: any) {
       toast.error(err.message);
     }
   };
 
-  useEffect(() => {
-    if (createFactionTrpc.isSuccess) {
-      toast.success(createFactionTrpc.data.message);
-      useRouter().refresh();
-    }
-    if (deleteFactionTrpc.isSuccess) {
-      toast.success(deleteFactionTrpc.data.message);
-      useRouter().refresh();
-    }
-  }, [createFactionTrpc]);
+  // useEffect(() => {
+  //   if (createFactionTrpc.isSuccess) {
+  //     toast.success(createFactionTrpc.data.message);
+  //     useRouter().refresh();
+  //   }
+  //   if (deleteFactionTrpc.isSuccess) {
+  //     toast.success(deleteFactionTrpc.data.message);
+  //     useRouter().refresh();
+  //   }
+  // }, [createFactionTrpc]);
 
   return (
     <div>
@@ -62,7 +67,7 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
         </button>
       </form>
       <div>
-        <FactionModal setShow={setShow} show={show} faction={faction} />
+        {/* <FactionModal setShow={setShow} show={show} faction={faction} /> */}
         <table>
           <thead>
             <tr>
