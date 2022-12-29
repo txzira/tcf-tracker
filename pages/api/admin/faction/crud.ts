@@ -14,7 +14,7 @@ async function createFaction(name: string) {
   }
 }
 
-async function updateFaction(id: number, name: string) {
+async function updateFaction(id: number, oldName: string, name: string) {
   try {
     console.log("try");
     await prisma.faction.update({
@@ -23,7 +23,7 @@ async function updateFaction(id: number, name: string) {
         ...(name && { name: name }),
       },
     });
-    return { message: `Success: Faction, ${name} , updated!`, status: "success" };
+    return { message: `Success: Faction ${oldName} renamed to, ${name}!`, status: "success" };
   } catch (err: any) {
     console.log(err);
     return { message: "Error: Faction already exist.", status: "failed" };
@@ -44,26 +44,45 @@ async function deleteFaction(id: number, name: string) {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { action } = req.body;
+    const reqBody = await JSON.parse(req.body);
+    let response;
+    let status;
+    const { action } = reqBody;
+    console.log(action);
     if (action === "create") {
-      const { factionName } = req.body;
-
+      //create faction
+      const { factionName } = reqBody;
       if (!factionName) {
         res.status(422).json({ message: "Error: Invalid Data", status: 422 });
         return;
       }
-      const response = await createFaction(factionName);
-      res.status(200).json(response);
+      response = await createFaction(factionName);
+      status = 200;
     } else if (action === "update") {
-      const { name, factionId } = req.body;
-      if (!name || !factionId) {
+      //update faction
+      const { factionName, factionId, oldFactionName } = reqBody;
+      if (!factionName || !factionId) {
         res.status(422).json({ message: "Error: Invalid Data", status: 422 });
         return;
       }
-      const response = updateFaction(Number(factionId), name);
-      res.status(200).json(response);
+      response = await updateFaction(Number(factionId), oldFactionName, factionName);
+      status = 200;
     } else if (action === "delete") {
+      // delete faction
+      console.log("delete");
+      const { factionName, factionId } = reqBody;
+      if (!factionName || !factionId) {
+        res.status(422).json({ message: "Error: Invalid Data", status: 422 });
+        return;
+      }
+      response = await deleteFaction(Number(factionId), factionName);
+      status = 200;
+    } else {
+      response = { message: "Error: Not Found", status: "Not Found" };
+      status = 404;
     }
+    res.status(status).json(response);
+    return;
   } else {
     res.status(500).json({ message: "Error: Route not valid", status: 500 });
   }

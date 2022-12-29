@@ -35,7 +35,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <header className="">
           <Navbar />
         </header>
-        <main className="flex flex-col bg-gradient-to-b from-black to-gray-800 text-gray-100 h-screen w-screen overflow-y-scroll">
+        <main className="flex flex-col bg-gradient-to-b from-black to-gray-800 text-gray-100 h-screen w-screen overflow-y-scroll" id="main">
           {children}
           <Footer />
         </main>

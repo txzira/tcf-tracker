@@ -3,15 +3,17 @@ import { Faction } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FloatingInput } from "../../../components/Form";
-import { FactionModal } from "../../../components/Modal";
+
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { FactionModal } from "./FactionModal";
 
 function FactionTable({ factions }: { factions: Faction[] | null }) {
   const [factionName, setFactionName] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
   const [faction, setFaction] = useState<Faction>();
+  const router = useRouter();
 
   const openModal = (faction: Faction) => {
     setFaction(faction);
@@ -20,18 +22,18 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
 
   const createFaction = async () => {
     if (factionName) {
-      console.log("try");
       try {
         const response = await fetch("/api/admin/faction/crud", {
           method: "POST",
 
-          body: JSON.stringify({ factionName }),
+          body: JSON.stringify({ action: "create", factionName }),
         });
-        console.log(response);
-        // await createFactionTrpc.mutateAsync({ name: factionName });
-      } catch (err: any) {
-        toast.error(err.message);
+        const json = await response.json();
+        toast.success(`${json.message}`);
+      } catch (error: any) {
+        toast.error(error.message);
       }
+      router.refresh();
     } else {
       toast.error("Empty faction name.");
     }
@@ -39,22 +41,18 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
 
   const deleteFaction = async (factionId: number, factionName: string) => {
     try {
-      // await deleteFactionTrpc.mutateAsync({ name: factionName, factionId: factionId });
-    } catch (err: any) {
-      toast.error(err.message);
+      console.log("try2");
+      const response = await fetch("/api/admin/faction/crud", {
+        method: "POST",
+        body: JSON.stringify({ action: "delete", factionName, factionId }),
+      });
+      const json = await response.json();
+      toast.success(json.message);
+    } catch (error: any) {
+      toast.error(error.message);
     }
+    router.refresh();
   };
-
-  // useEffect(() => {
-  //   if (createFactionTrpc.isSuccess) {
-  //     toast.success(createFactionTrpc.data.message);
-  //     useRouter().refresh();
-  //   }
-  //   if (deleteFactionTrpc.isSuccess) {
-  //     toast.success(deleteFactionTrpc.data.message);
-  //     useRouter().refresh();
-  //   }
-  // }, [createFactionTrpc]);
 
   return (
     <div>
@@ -67,7 +65,7 @@ function FactionTable({ factions }: { factions: Faction[] | null }) {
         </button>
       </form>
       <div>
-        {/* <FactionModal setShow={setShow} show={show} faction={faction} /> */}
+        <FactionModal setShow={setShow} show={show} faction={faction} />
         <table>
           <thead>
             <tr>
